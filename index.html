@@ -215,6 +215,7 @@ footer p{color:var(--mut);font-size:0.78rem;}
 <div class="lightbox" id="lightbox">
   <button class="lb-close" onclick="closeLightbox()">X</button>
   <img id="lbImg" src="" alt=""/>
+  <div id="lbEmoji" style="font-size:8rem;display:none;align-items:center;justify-content:center;max-width:80vw;max-height:50vh;aspect-ratio:1;padding:2rem;background:rgba(255,255,255,0.02);border:1px solid var(--bdr);border-radius:12px;text-shadow:0 0 40px rgba(232,123,30,0.25);"></div>
   <div class="lb-lbl" id="lbLbl"></div>
 </div>
 
@@ -342,6 +343,31 @@ var folders = {
   }
 };
 
+function getEmojiSymbol(keyword) {
+  const emojiMap = {
+    'medal': '🏅',
+    'scroll': '📜',
+    'frame': '🖼️',
+    'building': '🏢',
+    'grad': '🎓',
+    'badge': '📛',
+    'rings': '💍',
+    'mail': '✉️',
+    'cake': '🎂',
+    'shield': '🛡️',
+    'trophy': '🏆',
+    'notebook': '📓',
+    'book': '📘',
+    'tv': '📺',
+    'stage': '🎬',
+    'phone': '📱',
+    'hearts': '💖',
+    'person': '👤',
+    'camera': '📷'
+  };
+  return emojiMap[keyword] || '🎨';
+}
+
 function openFolder(id) {
   var f = folders[id];
   if (!f) return;
@@ -356,10 +382,12 @@ function openFolder(id) {
       var src = imgEl ? imgEl.src : '';
       thumbHtml = '<div class="i-thumb"><img src="' + src + '" alt="' + item.name + '"/><div class="i-hover">View</div></div>';
     } else {
-      thumbHtml = '<div class="i-thumb"><span style="font-size:3rem;">&#127912;</span><div class="i-hover">View</div></div>';
+      var emo = getEmojiSymbol(item.emoji);
+      thumbHtml = '<div class="i-thumb"><span style="font-size:3rem;">' + emo + '</span><div class="i-hover">View</div></div>';
     }
     var clickSrc = item.imgId ? 'document.getElementById(' + JSON.stringify(item.imgId) + ').src' : 'null';
-    html += '<div class="item-card" onclick="openLightbox(' + clickSrc + ',' + JSON.stringify(item.name) + ')">';
+    var clickEmoji = item.imgId ? 'null' : JSON.stringify(getEmojiSymbol(item.emoji));
+    html += '<div class="item-card" onclick="openLightbox(' + clickSrc + ',' + JSON.stringify(item.name) + ',' + clickEmoji + ')">';
     html += thumbHtml;
     html += '<div class="i-info"><h4>' + item.name + '</h4><p>' + item.desc + '</p>';
     html += '<span class="i-badge">' + f.name + '</span></div></div>';
@@ -374,9 +402,22 @@ function closeOverlay() {
   document.body.style.overflow = '';
 }
 
-function openLightbox(src, name) {
-  if (!src) return;
-  document.getElementById('lbImg').src = src;
+// Updated openLightbox helper
+function openLightbox(src, name, emoji) {
+  var imgEl = document.getElementById('lbImg');
+  var emojiEl = document.getElementById('lbEmoji');
+  
+  if (src) {
+    imgEl.src = src;
+    imgEl.style.display = 'block';
+    emojiEl.style.display = 'none';
+  } else {
+    imgEl.src = '';
+    imgEl.style.display = 'none';
+    emojiEl.textContent = emoji || '🎨';
+    emojiEl.style.display = 'flex';
+  }
+  
   document.getElementById('lbLbl').textContent = name;
   document.getElementById('lightbox').classList.add('open');
 }
