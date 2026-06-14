@@ -377,17 +377,18 @@ function openFolder(id) {
   for (var i = 0; i < f.items.length; i++) {
     var item = f.items[i];
     var thumbHtml = '';
+    var imgEl = item.imgId ? document.getElementById(item.imgId) : null;
+    var clickSrc = imgEl ? imgEl.src : '';
+    var clickEmoji = item.imgId ? '' : getEmojiSymbol(item.emoji);
+    var safeName = item.name.replace(/"/g, '&quot;');
+    
     if (item.imgId) {
-      var imgEl = document.getElementById(item.imgId);
-      var src = imgEl ? imgEl.src : '';
-      thumbHtml = '<div class="i-thumb"><img src="' + src + '" alt="' + item.name + '"/><div class="i-hover">View</div></div>';
+      thumbHtml = '<div class="i-thumb"><img src="' + clickSrc + '" alt="' + safeName + '"/><div class="i-hover">View</div></div>';
     } else {
-      var emo = getEmojiSymbol(item.emoji);
-      thumbHtml = '<div class="i-thumb"><span style="font-size:3rem;">' + emo + '</span><div class="i-hover">View</div></div>';
+      thumbHtml = '<div class="i-thumb"><span style="font-size:3rem;">' + clickEmoji + '</span><div class="i-hover">View</div></div>';
     }
-    var clickSrc = item.imgId ? 'document.getElementById(' + JSON.stringify(item.imgId) + ').src' : 'null';
-    var clickEmoji = item.imgId ? 'null' : JSON.stringify(getEmojiSymbol(item.emoji));
-    html += '<div class="item-card" onclick="openLightbox(' + clickSrc + ',' + JSON.stringify(item.name) + ',' + clickEmoji + ')">';
+    
+    html += '<div class="item-card" data-src="' + clickSrc + '" data-name="' + safeName + '" data-emoji="' + clickEmoji + '">';
     html += thumbHtml;
     html += '<div class="i-info"><h4>' + item.name + '</h4><p>' + item.desc + '</p>';
     html += '<span class="i-badge">' + f.name + '</span></div></div>';
@@ -402,7 +403,6 @@ function closeOverlay() {
   document.body.style.overflow = '';
 }
 
-// Updated openLightbox helper
 function openLightbox(src, name, emoji) {
   var imgEl = document.getElementById('lbImg');
   var emojiEl = document.getElementById('lbEmoji');
@@ -425,6 +425,16 @@ function openLightbox(src, name, emoji) {
 function closeLightbox() {
   document.getElementById('lightbox').classList.remove('open');
 }
+
+// Event delegation listener for itemsGrid clicks to avoid inline HTML quoting bugs
+document.getElementById('itemsGrid').addEventListener('click', function(e) {
+  var card = e.target.closest('.item-card');
+  if (!card) return;
+  var src = card.getAttribute('data-src');
+  var name = card.getAttribute('data-name');
+  var emoji = card.getAttribute('data-emoji');
+  openLightbox(src, name, emoji);
+});
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
