@@ -389,7 +389,7 @@ function closeLightbox() {
 <script>
 const SUPABASE_URL = 'https://ohtehsbixotmetkectdi.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9odGVoc2JpeG90bWV0a2VjdGRpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0MjEzMDYsImV4cCI6MjA5Njk5NzMwNn0.PDtEcuWIyKSwdWyy4GFjro5ozgqoVMWbZCUrGDd1UyY';
-const supabase = supabasejs.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 document.getElementById('leadForm').addEventListener('submit', async function(e) {
   e.preventDefault();
