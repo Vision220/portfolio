@@ -7,7 +7,6 @@ A premium dark-themed portfolio website for **VisionForge** (Coimbatore, Tamil N
 - **Dynamic Projects Showcase**: Filter projects by clicking folder cards.
 - **Lightbox Preview**: Full-screen modal for viewing high-resolution designs.
 - **Lead Capture Form**: Submits lead details (Name, Contact, Service Needed, and Project Details) directly to a secured **Supabase Database** using Row Level Security (RLS).
-- **Vercel Routing**: Configured with ercel.json to handle routing for the single-page HTML application.
 
 ## Technologies Used
 
@@ -18,7 +17,7 @@ A premium dark-themed portfolio website for **VisionForge** (Coimbatore, Tamil N
 ## Setup & Deployment
 
 1. **Local Setup**:
-   Simply open isionforge_portfolio.html in any web browser.
+   Simply open index.html in any web browser.
 
 2. **Deploy to Vercel**:
    - Push to a GitHub repository and link it to Vercel, or
